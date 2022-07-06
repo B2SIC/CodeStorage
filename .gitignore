@@ -1,3 +1,6 @@
 .idea/*
 .vscode/*
 *.exe
+main.c
+main.cpp
+main.py

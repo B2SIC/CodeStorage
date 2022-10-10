@@ -4,9 +4,9 @@ n, k = map(int, input().split())
 
 data_list = []
 for _ in range(n):
-	name, height = input().split()
-	data_list.append((name, float(height)))
+    name, height = input().split()
+    data_list.append((name, float(height)))
 
-data_list.sort(key=lambda x:(x[0], x[1]))
+data_list.sort(key=lambda x: (x[0], x[1]))
 name, height = data_list[k - 1]
 print(f"{name} {height:.2f}")

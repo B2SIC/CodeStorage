@@ -6,10 +6,10 @@ for _ in range(t):
     n = int(input())
     v = list(map(int, input().split()))
 
-    cut_line = sum(v) / len(v)
+    avg = sum(v) / n
     pass_count = 0
     for score in v:
-        if score >= cut_line:
+        if score >= avg:
             pass_count += 1
 
-    print(str(pass_count) + "/" + str(n))
+    print(f"{pass_count}/{n}")

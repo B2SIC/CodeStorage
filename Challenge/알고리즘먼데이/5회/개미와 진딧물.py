@@ -1,41 +1,45 @@
 # -*- coding: utf-8 -*-
 # UTF-8 encoding when using korean
-# Unsolved
+def search_house(x, y, m, arr):
+    # 위쪽 영역
+    for k in range(0, m + 1):
+        if x - k < 0 or x - k >= n:
+            continue
+        if arr[x - k][y] == 2:
+            return True
+        for j in range(1, m - k + 1):
+            if 0 <= y - j < n:
+                if arr[x - k][y - j] == 2:
+                    return True
+            if 0 <= y + j < n:
+                if arr[x - k][y + j] == 2:
+                    return True
+
+    # 아래 영역
+    for k in range(1, m + 1):
+        if x + k < 0 or x + k >= n:
+            continue
+        if arr[x + k][y] == 2:
+            return True
+        for j in range(1, m - k + 1):
+            if 0 <= y - j < n:
+                if arr[x + k][y - j] == 2:
+                    return True
+            if 0 <= y + j < n:
+                if arr[x + k][y + j] == 2:
+                    return True
+
+
 n, m = map(int, input().split())
-
 arr = []
-
 for _ in range(n):
     arr.append(list(map(int, input().split())))
 
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+ans_house = 0
+for x in range(n):
+    for y in range(n):
+        if arr[x][y] == 1:
+            if search_house(x, y, m, arr):
+                ans_house += 1
 
-total_ant_house = 0
-
-for i in range(n):
-    for j in range(n):
-        if arr[i][j] == 1:
-            total_ant_house += 1
-            is_food = False
-
-            for mp in range(1, m + 1):
-                for k in range(4):
-                    nx = i + (dx[k] * mp)
-                    ny = j + (dy[k] * mp)
-
-                    if nx < 0 or ny < 0 or nx >= n or ny >= n:
-                        continue
-
-                    if arr[nx][ny] == 2:
-                        is_food = True
-                        break
-
-                if is_food is True:
-                    break
-
-            if is_food is False:
-                arr[i][j] = 0
-                total_ant_house -= 1
-
-print(total_ant_house)
+print(ans_house)

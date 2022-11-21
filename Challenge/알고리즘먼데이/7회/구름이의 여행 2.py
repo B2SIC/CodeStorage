@@ -1,62 +1,34 @@
 # -*- coding: utf-8 -*-
 # UTF-8 encoding when using korean
-'''
-Test Case (Unsolved)
-8 11 4
-4 2
-1 2
-1 4
-4 5
-5 3
-3 1
-4 6
-6 7
-7 4
-2 8
-8 1
-'''
+from collections import deque
 import sys
 
-sys.setrecursionlimit(10 ** 6)
+input = sys.stdin.readline
 
-n, m, start = map(int, input().split())
+n, m, k = map(int, input().rstrip().split())
 
 graph = [[] for _ in range(n + 1)]
-sequence = []
 
 for _ in range(m):
-    a, b = map(int, input().split())
-    graph[a].append(b)
+    u, v = map(int, input().rstrip().split())
+    graph[u].append(v)
 
+visited = [0] * (n + 1)
+q = deque()
+q.append(k)
 
-def dfs(start, v):
-    if visited[v]:
-        if v == start:
-            return True
-        return False
+while q:
+    x = q.popleft()
 
-    visited[v] = True
-    seq.append(v)
+    for i in graph[x]:
+        if visited[i] == 0:
+            q.append(i)
+            visited[i] += visited[x] + 1
 
-    for k in graph[v]:
-        if dfs(start, k):
-            return True
-    return False
+        if i == k:
+            break
 
-
-ans = int(1e9)
-for i in graph[start]:
-    visited = [False] * (n + 1)
-    visited[start] = True
-    seq = [start]
-    res = dfs(start, i)
-    print(res, seq)
-
-    if res:
-        if len(seq) < ans:
-            ans = len(seq)
-
-if ans == int(1e9):
+if visited[k] == 0:
     print(-1)
 else:
-    print(ans)
+    print(visited[k])

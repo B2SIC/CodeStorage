@@ -1,39 +1,33 @@
-import sys
 from collections import deque
+import sys
 
-n, m = map(int, input().split())
+input = sys.stdin.readline
+n, m = map(int, input().rstrip().split())
 
-graph = [[] for _ in range(500001)]
-visited = [False] * 500001
-max_iter = 0
-alone_node = set()
-queue = deque()
+graph = [[] for _ in range(n + 1)]
+visited = [False] * (n + 1)
+ans = 0
 
 for _ in range(m):
-  u, v = map(int, sys.stdin.readline().rstrip().split())
-  graph[u].append(v)
-  graph[v].append(u)
-  alone_node.add(u)
-  alone_node.add(v)
+    u, v = map(int, input().rstrip().split())
+    graph[u].append(v)
+    graph[v].append(u)
 
-  if max_iter < u:
-    max_iter = u
-  if max_iter < v:
-    max_iter = v
+for node in range(1, n + 1):
+    if visited[node]:
+        continue
 
-result = 0
-for i in range(max_iter):
-  for v in graph[i]:
-    if visited[v] is False:
-      result += 1
-      queue.append(v)
-      visited[v] = True
+    queue = deque()
+    queue.append(node)
+    visited[node] = True
 
-      while queue:
-        val = queue.popleft()
-        for k in graph[val]:
-          if visited[k] is False:
-            queue.append(k)
-            visited[k] = True
+    while queue:
+        x = queue.popleft()
 
-print(result + (n - len(alone_node)))
+        for i in graph[x]:
+            if visited[i]: continue
+            queue.append(i)
+            visited[i] = True
+    ans += 1
+
+print(ans)

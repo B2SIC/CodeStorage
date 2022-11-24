@@ -1,20 +1,36 @@
 n = int(input())
-
-my_card_list = list(map(int, input().split()))
-
+n_list = list(map(int, input().split()))
 m = int(input())
-your_card_list = list(map(int, input().split()))
+m_list = list(map(int, input().split()))
 
-card_dict = dict()
+n_list.sort()
 
-for card in my_card_list:
-  if card_dict.get(card, -1) == -1:
-    card_dict[card] = 1
-  else:
-    card_dict[card] += 1
+def lower_idx(num_list, num):
+    l = 0
+    r = len(num_list)
 
-for card in your_card_list:
-  if card_dict.get(card, -1) == -1:
-    print(0, end=' ')
-  else:
-    print(card_dict[card], end=' ')
+    while l < r:
+        m = (l + r) // 2
+
+        if num_list[m] >= num:
+            r = m
+        else:
+            l = m + 1
+
+    return l
+
+def upper_idx(num_list, num):
+    l = 0
+    r = len(num_list)
+
+    while l < r:
+        m = (l + r) // 2
+
+        if num_list[m] > num:
+            r = m
+        else:
+            l = m + 1
+    return l
+
+for num in m_list:
+    print(upper_idx(n_list, num) - lower_idx(n_list, num), end=' ')

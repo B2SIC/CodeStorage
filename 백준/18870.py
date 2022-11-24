@@ -1,16 +1,23 @@
 n = int(input())
 
-arr = list(map(int, input().split()))
+n_list = list(map(int, input().split()))
+b_n_list = list(set(n_list))
+b_n_list.sort()
 
-sorted_arr = sorted(set(arr))
+def binary_search(num_list, target):
+    st = 0
+    en = len(num_list) - 1
 
-arr_dict = dict()
-num_count = 0
+    while st <= en:
+        m = (st + en) // 2
 
-for num in sorted_arr:
-  if arr_dict.get(num, -1) == -1:
-    arr_dict[num] = num_count
-    num_count += 1
+        if num_list[m] > target:
+            en = m - 1
+        elif num_list[m] < target:
+            st = m + 1
+        else:
+            return m
+    return 0
 
-for num in arr:
-  print(arr_dict[num], end=' ')
+for num in n_list:
+    print(binary_search(b_n_list, num), end=' ')

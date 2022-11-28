@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 # UTF-8 encoding when using korean
 n = int(input())
-s = input()
+groom = input()
 
-groom_dict = dict()
-groom_num = [i for i in range(10)]
-groom_str = ['ze', 'qw', 'as', 'zx', 'we', 'sd', 'xc', 'er', 'df', 'cv']
+groom_dict = {
+    'qw': '1', 'as': '2', 'zx': '3',
+    'we': '4', 'sd': '5', 'xc': '6',
+    'er': '7', 'df': '8', 'cv': '9', 'ze': '0'
+}
 
-for i in range(10):
-    groom_dict[groom_str[i]] = groom_num[i]
+ans = ''
+for i in range(len(groom) - 1):
+    concat = groom[i] + groom[i + 1]
 
-for k in range(len(s) - 1):
-    comb = s[k] + s[k + 1]
+    if concat in groom_dict.keys():
+        ans += groom_dict[concat]
 
-    if groom_dict.get(comb, -1) == -1:
-        continue
-
-    print(groom_dict[comb], end='')
+print(ans)

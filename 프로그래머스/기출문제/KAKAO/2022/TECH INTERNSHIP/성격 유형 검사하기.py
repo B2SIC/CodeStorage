@@ -1,5 +1,3 @@
-# 2022 KAKAO TECH INTERNSHIP
-
 def solution(survey, choices):
     answer = ''
 

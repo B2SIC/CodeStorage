@@ -1,28 +1,31 @@
-from collections import deque
+'''
+1697번 숨바꼭질
 
-n, k = map(int, input().split())
-graph = [0 for _ in range(200001)]
-visited = [False] * 200001
+1차원 BFS 적용하기
+'''
+
+from collections import deque
+import sys
+
+
+input = sys.stdin.readline
+INF = sys.maxsize
+
+n, k = map(int, input().rstrip().split())
+
+dist = [-1] * (100000 + 1)
 
 queue = deque()
 queue.append(n)
+dist[n] = 0
 
 while queue:
-  val = queue.popleft()
-  dx = [val - 1, val + 1, val * 2]
+    x = queue.popleft()
 
-  if val == k:
-    break
+    for i in [x - 1, x + 1, x * 2]:
+        if i < 0 or i > 100000 or dist[i] != -1:
+            continue
+        dist[i] = dist[x] + 1
+        queue.append(i)
 
-  for i in range(3):
-    nval = dx[i]
-
-    if nval < 0 or nval > 100000:
-      continue
-
-    if visited[nval] is False:
-      graph[nval] = graph[val] + 1
-      queue.append(nval)
-      visited[nval] = True
-
-print(graph[k])
+print(dist[k])

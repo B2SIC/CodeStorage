@@ -1,72 +1,69 @@
 from collections import deque
-
-n, m = map(int, input().split())
-graph = list()
-
-for _ in range(n):
-    graph.append(list(map(int, input().split())))
+import sys
+input = sys.stdin.readline
 
 
-def bfs(get_graph):
-    dx = [-1, 1, 0, 0]
-    dy = [0, 0, -1, 1]
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+def bfs(virus_list, virus_graph):
     queue = deque()
-    safety_zone = 0
+    for virus in virus_list:
+        queue.append(virus)
 
-    for i in range(n):
-        for j in range(m):
-            if get_graph[i][j] == 2:
-                queue.append((i, j))
+    while queue:
+        a, b = queue.popleft()
 
-                while queue:
-                    x, y = queue.popleft()
+        for k in range(4):
+            nx = a + dx[k]
+            ny = b + dy[k]
 
-                    for k in range(4):
-                        nx = x + dx[k]
-                        ny = y + dy[k]
+            if nx < 0 or ny < 0 or nx >= n or ny >= m:
+                continue
 
-                        if nx < 0 or ny < 0 or nx >= n or ny >= m:
-                            continue
-
-                        if get_graph[nx][ny] == 1:
-                            continue
-                        if get_graph[nx][ny] == 0:
-                            get_graph[nx][ny] = 2
-                            queue.append((nx, ny))
-
-    for i in range(n):
-        for j in range(m):
-            if get_graph[i][j] == 0:
-                safety_zone += 1
-
-    return safety_zone
+            if virus_graph[nx][ny] == 0:
+                virus_graph[nx][ny] = 2
+                queue.append((nx, ny))
+    return virus_graph
 
 
-wall_pos = list()
-max_safe = 0
+n, m = map(int, input().rstrip().split())
+graph = []
+for _ in range(n):
+    graph.append(list(map(int, input().rstrip().split())))
 
+# 벽을 세울 수 있는 공간과 시작점 찾기
+virus_list = []
+find_zero = []
 for i in range(n):
     for j in range(m):
         if graph[i][j] == 0:
-            wall_pos.append((i, j))
+            find_zero.append((i, j))
+        elif graph[i][j] == 2:
+            virus_list.append((i, j))
 
-for i in range(len(wall_pos) - 2):
-    for j in range(i + 1, len(wall_pos) - 1):
-        for k in range(j + 1, len(wall_pos)):
-            # 벽 생성
-            copy_graph = [item[:] for item in graph]
-            x, y = wall_pos[i]
-            copy_graph[x][y] = 1
+# 벽 3개 선택하기
+safe_zone = 0
+select_wall = []
+for i in range(len(find_zero)):
+    for j in range(i + 1, len(find_zero)):
+        for k in range(j + 1, len(find_zero)):
+            select_wall.append([find_zero[i], find_zero[j], find_zero[k]])
 
-            x, y = wall_pos[j]
-            copy_graph[x][y] = 1
+# 벽 세우고 바이러스 BFS
+for wall in select_wall:
+    sample_graph = [elem[:] for elem in graph]
 
-            x, y = wall_pos[k]
-            copy_graph[x][y] = 1
+    for x, y in wall:
+        sample_graph[x][y] = 1
 
-            result = bfs(copy_graph)
+    res = bfs(virus_list, sample_graph)
 
-            if max_safe < result:
-                max_safe = result
+    calc_safe_zone = 0
+    for elem in res:
+        calc_safe_zone += elem.count(0)
 
-print(max_safe)
+    if safe_zone < calc_safe_zone:
+        safe_zone = calc_safe_zone
+
+print(safe_zone)

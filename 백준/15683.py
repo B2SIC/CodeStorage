@@ -1,342 +1,69 @@
-# Unsolved
+def dfs(my_cctv, case, visited, r, start, depth):
+    if r == depth:
+        # CCTV 감시 구역 표시하기
+        tmp_maps = [maps[i][:] for i in range(len(maps))]
+        for target, order in zip(my_cctv, case):
+            for dx, dy in order:
+                _, x, y = target
+                while True:
+                    nx = x + dx
+                    ny = y + dy
 
-n, m = map(int, input().split())
-cctv_map = list()
-for _ in range(n):
-    cctv_map.append(
-        list(map(int, input().split()))
-    )
+                    # 범위를 벗어나거나 벽이 있다면 STOP
+                    if nx < 0 or ny < 0 or nx >= n or ny >= m:
+                        break
+                    if tmp_maps[nx][ny] == 6:
+                        break
 
-cctv1_x = [0, 0, -1, 1]
-cctv1_y = [1, -1, 0, 0]
-cctv2 = [0, 1]
-cctv3_x = [-1, 1, -1, 1]
-cctv3_y = [1, 1, -1, -1]
-cctv4 = [1, 0, 3, 2]
+                    if tmp_maps[nx][ny] == 0:
+                        tmp_maps[nx][ny] = '#'
+                    x, y = nx, ny
 
-ans = 64
+        # 사각지대 계산
+        global min_res
+        res = 0
+        for i in range(n):
+            for j in range(m):
+                if tmp_maps[i][j] == 0:
+                    res += 1
 
-def cctv_check(cctv_map, cctv_list):
-    global ans
-    if len(cctv_list) == 0:
-        ans = 1
+        if res < min_res:
+            min_res = res
         return
 
-    x, y, cctv_num = cctv_list.pop(0)
-
-    if cctv_num == 1 or cctv_num == 3:
-        if cctv_num == 1:
-            nx_cctv_x = cctv1_x
-            nx_cctv_y = cctv1_y
-        elif cctv_num == 3:
-            nx_cctv_x = cctv3_x
-            nx_cctv_y = cctv3_y
-
-        for i in range(4):
-            cctv_map_tmp = []
-            cctv_map_tmp[:] = [item[:] for item in cctv_map]
-            nx = x + nx_cctv_x[i]
-            ny = y + nx_cctv_y[i]
-            while True:
-                if nx < 0 or ny < 0 or nx >= n or ny >= m:
-                    break
-
-                if cctv_map[nx][ny] == 6:
-                    break
-
-                if cctv_map[nx][ny] == 0:
-                    cctv_map[nx][ny] = '#'
-
-                nx = nx + nx_cctv_x[i]
-                ny = ny + nx_cctv_y[i]
-
-            if len(cctv_list) != 0:
-                cctv_check(cctv_map, cctv_list)
-            else:
-                count_zero = 0
-                for cctv_line in cctv_map:
-                    count_zero += cctv_line.count(0)
-
-                if count_zero < ans:
-                    ans = count_zero
-
-            cctv_map[:] = cctv_map_tmp
-
-        cctv_list.insert(0, [x, y, cctv_num])
-
-    elif cctv_num == 2:
-        for i in range(2):
-            cctv_map_tmp = []
-            cctv_map_tmp[:] = [item[:] for item in cctv_map]
-            if cctv2[i] == 0:
-                # 좌우 0
-                ny = y + 1
-                while True:
-                    if ny >= m:
-                        break
-
-                    if cctv_map[x][ny] == 6:
-                        break
-
-                    if cctv_map[x][ny] == 0:
-                        cctv_map[x][ny] = '#'
-
-                    ny += 1
-
-                ny = y - 1
-                while True:
-                    if ny < 0:
-                        break
-
-                    if cctv_map[x][ny] == 6:
-                        break
-
-                    if cctv_map[x][ny] == 0:
-                        cctv_map[x][ny] = '#'
-
-                    ny -= 1
-            else:
-                nx = x + 1
-                while True:
-                    if nx >= n:
-                        break
-
-                    if cctv_map[nx][y] == 6:
-                        break
-
-                    if cctv_map[nx][y] == 0:
-                        cctv_map[nx][y] = '#'
-
-                    nx += 1
-
-                nx = x - 1
-                while True:
-                    if nx < 0:
-                        break
-
-                    if cctv_map[nx][y] == 6:
-                        break
-
-                    if cctv_map[nx][y] == 0:
-                        cctv_map[nx][y] = '#'
-
-                    nx -= 1
-
-            if len(cctv_list) != 0:
-                cctv_check(cctv_map, cctv_list)
-            else:
-                count_zero = 0
-                for cctv_line in cctv_map:
-                    count_zero += cctv_line.count(0)
-
-                if count_zero < ans:
-                    ans = count_zero
-
-            cctv_map[:] = cctv_map_tmp
-        cctv_list.insert(0, [x, y, cctv_num])
-
-    elif cctv_num == 4:
-        for i in range(4):
-            cctv_map_tmp = []
-            cctv_map_tmp[:] = [item[:] for item in cctv_map]
-
-            if cctv4[i] <= 1:
-                # 좌우 0
-                ny = y + 1
-                while True:
-                    if ny >= m:
-                        break
-
-                    if cctv_map[x][ny] == 6:
-                        break
-
-                    if cctv_map[x][ny] == 0:
-                        cctv_map[x][ny] = '#'
-
-                    ny += 1
-
-                ny = y - 1
-                while True:
-                    if ny < 0:
-                        break
-
-                    if cctv_map[x][ny] == 6:
-                        break
-
-                    if cctv_map[x][ny] == 0:
-                        cctv_map[x][ny] = '#'
-
-                    ny -= 1
-
-                if cctv4[i] == 0:
-                    nx = x + 1
-
-                    while True:
-                        if nx >= n:
-                            break
-
-                        if cctv_map[nx][y] == 6:
-                            break
-
-                        if cctv_map[nx][y] == 0:
-                            cctv_map[nx][y] = '#'
-
-                        nx += 1
-                else:
-                    nx = x - 1
-
-                    while True:
-                        if nx < 0 :
-                            break
-
-                        if cctv_map[nx][y] == 6:
-                            break
-
-                        if cctv_map[nx][y] == 0:
-                            cctv_map[nx][y] = '#'
-
-                        nx -= 1
-            elif cctv4[i] >= 2:
-                nx = x + 1
-                while True:
-                    if nx >= n:
-                        break
-
-                    if cctv_map[nx][y] == 6:
-                        break
-
-                    if cctv_map[nx][y] == 0:
-                        cctv_map[nx][y] = '#'
-
-                    nx += 1
-
-                nx = x - 1
-                while True:
-                    if nx < 0:
-                        break
-
-                    if cctv_map[nx][y] == 6:
-                        break
-
-                    if cctv_map[nx][y] == 0:
-                        cctv_map[nx][y] = '#'
-
-                    nx -= 1
-
-
-                if cctv4[i] == 2:
-                    ny = y - 1
-                    while True:
-                        if ny < 0:
-                            break
-
-                        if cctv_map[x][ny] == 6:
-                            break
-
-                        if cctv_map[x][ny] == 0:
-                            cctv_map[x][ny] = '#'
-
-                        ny -= 1
-                else:
-                    ny = y + 1
-                    while True:
-                        if ny >= m:
-                            break
-
-                        if cctv_map[x][ny] == 6:
-                            break
-
-                        if cctv_map[x][ny] == 0:
-                            cctv_map[x][ny] = '#'
-
-                        ny += 1
-
-            if len(cctv_list) != 0:
-                cctv_check(cctv_map, cctv_list)
-            else:
-                count_zero = 0
-                for cctv_line in cctv_map:
-                    count_zero += cctv_line.count(0)
-
-                if count_zero < ans:
-                    ans = count_zero
-
-            cctv_map[:] = cctv_map_tmp
-
-        cctv_list.insert(0, [x, y, cctv_num])
-    elif cctv_num == 5:
-        cctv_map_tmp = []
-        cctv_map_tmp[:] = [item[:] for item in cctv_map]
-
-        nx = x + 1
-        while True:
-            if nx >= n:
-                break
-
-            if cctv_map[nx][y] == 6:
-                break
-
-            if cctv_map[nx][y] == 0:
-                cctv_map[nx][y] = '#'
-
-            nx += 1
-
-        nx = x - 1
-        while True:
-            if nx < 0:
-                break
-
-            if cctv_map[nx][y] == 6:
-                break
-
-            if cctv_map[nx][y] == 0:
-                cctv_map[nx][y] = '#'
-
-            nx -= 1
-
-        ny = y - 1
-        while True:
-            if ny < 0:
-                break
-
-            if cctv_map[x][ny] == 6:
-                break
-
-            if cctv_map[x][ny] == 0:
-                cctv_map[x][ny] = '#'
-
-            ny -= 1
-
-        ny = y + 1
-        while True:
-            if ny >= m:
-                break
-
-            if cctv_map[x][ny] == 6:
-                break
-
-            if cctv_map[x][ny] == 0:
-                cctv_map[x][ny] = '#'
-
-            ny += 1
-
-        if len(cctv_list) != 0:
-            cctv_check(cctv_map, cctv_list)
-        else:
-            count_zero = 0
-            for cctv_line in cctv_map:
-                count_zero += cctv_line.count(0)
-
-            if count_zero < ans:
-                ans = count_zero
-
-        cctv_map[:] = cctv_map_tmp
-
-cctv_list = list()
+    for i in range(start, len(my_cctv)):
+        cctv_num, x, y = my_cctv[i]
+        if not visited[i]:
+            visited[i] = 1
+            for dir in direction[cctv_num]:
+                case[depth] = dir
+                dfs(my_cctv, case, visited, r, i + 1, depth + 1)
+            visited[i] = 0
+
+
+n, m = map(int, input().split())
+min_res = int(1e9)
+maps = []
+for _ in range(n):
+    maps.append(list(map(int, input().split())))
+
+# CCTV 방향 설정
+direction = {
+    1: [[(0, -1)], [(0, 1)], [(-1, 0)], [(1, 0)]],
+    2: [[(0, -1), (0, 1)], [(-1, 0), (1, 0)]],
+    3: [[(-1, 0), (0, 1)], [(0, 1), (1, 0)], [(1, 0), (0, -1)], [(0, -1), (-1, 0)]],
+    4: [[(-1, 0), (0, 1), (0, -1)], [(-1, 0), (0, 1), (1, 0)], [(0, 1), (1, 0), (0, -1)], [(1, 0), (0, -1), (-1, 0)]],
+    5: [[(-1, 0), (0, 1), (1, 0), (0, -1)]]
+}
+
+# CCTV 종류, 위치 얻기
+my_cctv = []
 for i in range(n):
     for j in range(m):
-        if cctv_map[i][j] != 6 and cctv_map[i][j] != 0:
-            cctv_list.append((i, j, cctv_map[i][j]))
+        if 1 <= maps[i][j] <= 5:
+            my_cctv.append((maps[i][j], i, j))
 
-cctv_check(cctv_map, cctv_list)
-print(ans)
+visited = [False] * len(my_cctv)
+case = [[] for _ in range(len(my_cctv))]
+dfs(my_cctv, case, visited, len(my_cctv), 0, 0)
+print(min_res)

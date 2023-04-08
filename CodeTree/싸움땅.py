@@ -119,8 +119,7 @@ for _ in range(k):  # k번의 라운드 진행
             if type(maps[loser_nx][loser_ny]) is list:
                 for k in range(len(maps[loser_nx][loser_ny])):
                     if maps[loser_nx][loser_ny][k] > players_gun[loser]:
-                        maps[loser_nx][loser_ny][k], players_gun[loser] = players_gun[loser], maps[loser_nx][loser_ny][
-                            k]
+                        maps[loser_nx][loser_ny][k], players_gun[loser] = players_gun[loser], maps[loser_nx][loser_ny][k]
             else:  # 총이 하나일 경우
                 if maps[loser_nx][loser_ny] > players_gun[loser]:
                     maps[loser_nx][loser_ny], players_gun[loser] = players_gun[loser], maps[loser_nx][loser_ny]
@@ -129,8 +128,7 @@ for _ in range(k):  # k번의 라운드 진행
             if type(maps[player_x][player_y]) is list:
                 for k in range(len(maps[player_x][player_y])):
                     if maps[player_x][player_y][k] > players_gun[winner]:
-                        maps[player_x][player_y][k], players_gun[winner] = players_gun[winner], \
-                                                                           maps[player_x][player_y][k]
+                        maps[player_x][player_y][k], players_gun[winner] = players_gun[winner], maps[player_x][player_y][k]
             else:  # 총이 하나일 경우
                 if maps[player_x][player_y] > players_gun[winner]:
                     maps[player_x][player_y], players_gun[winner] = players_gun[winner], maps[player_x][player_y]

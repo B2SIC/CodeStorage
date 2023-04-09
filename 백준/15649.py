@@ -1,22 +1,18 @@
-import sys
-input = sys.stdin.readline
-
-n, m = map(int, input().split())
-arr = [0] * m
-isused = [0] * (n + 1)
-
-def func(k):
-    if k == m:
-        for i in range(m):
-            print(arr[i], end=' ')
-        print()
+def dfs(p, depth):
+    if depth == m:
+        print(*p)
         return
 
     for i in range(1, n + 1):
-        if not isused[i]:
-            arr[k] = i
-            isused[i] = 1
-            func(k + 1)
-            isused[i] = 0
+        if not visited[i]:
+            visited[i] = 1
+            p[depth] = i
+            dfs(p, depth + 1)
+            visited[i] = 0
 
-func(0)
+
+n, m = map(int, input().split())
+arr = [i for i in range(1, n + 1)]
+visited = [0] * (n + 1)
+p = [0] * m
+dfs(p, 0)

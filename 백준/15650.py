@@ -1,22 +1,19 @@
-import sys
-input = sys.stdin.readline
-
-n, m = map(int, input().split())
-arr = [0] * m
-isused = [0] * (n + 1)
-
-def backtracking(num, k):
-    if k == m:
-        for i in range(m):
-            print(arr[i], end=' ')
+def dfs(start, depth):
+    if depth == m:
+        for k in range(1, n + 1):
+            if visited[k]:
+                print(k, end=' ')
         print()
         return
 
-    for i in range(num, n + 1):
-        if not isused[i]:
-            arr[k] = i
-            isused[i] = 1
-            backtracking(i + 1, k + 1)
-            isused[i] = 0
+    for i in range(start, n + 1):
+        if not visited[i]:
+            visited[i] = 1
+            dfs(i + 1, depth + 1)
+            visited[i] = 0
 
-backtracking(1, 0)
+
+n, m = map(int, input().split())
+arr = [i for i in range(1, n + 1)]
+visited = [0] * (n + 1)
+dfs(1, 0)

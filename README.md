@@ -9,5 +9,5 @@
 * Softeer
 
 
-## 📝 풀이 과정 기록
-* [BASIC의 개발 노트](https://basicsoft.tistory.com/)
+## 📝 다른 언어
+* [CodeStorage-Java](https://github.com/B2SIC/CodeStorage-Java)

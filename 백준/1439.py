@@ -1,25 +1,19 @@
-s = input()
+s = list(map(int, input()))
+r = []
 
-one_list = list()
-zero_list = list()
+before = -1
+for i in range(len(s)):
+    if s[i] != before:
+        r.append(s[i])
+    before = s[i]
 
-conn_str = ""
-for i in range(0, len(s)):
-  if conn_str == "":
-    conn_str = s[i]
-  elif conn_str[0] == s[i]:
-    conn_str += s[i]
-  elif conn_str[0] != s[i]:
-    if conn_str.startswith('0'):
-      zero_list.append(conn_str)
-      conn_str = s[i]
+ct_0 = 0
+ct_1 = 0
+for elem in r:
+    if elem == 1:
+        ct_1 += 1
     else:
-      one_list.append(conn_str)
-      conn_str = s[i]
+        ct_0 += 1
 
-if conn_str.startswith('0'):
-  zero_list.append(conn_str)
-else:
-  one_list.append(conn_str)
-
-print(min(len(one_list), len(zero_list)))
+res = min(ct_0, ct_1)
+print(res)
